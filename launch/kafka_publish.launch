@@ -3,11 +3,11 @@
 <launch>
 
     <arg name="bootstrap_server" default="114.70.21.162:9092"/>
-    <arg name="kafka_topic" default="external-comm-test"/>
+    <arg name="kafka_topic" default="object"/>
     <arg name="ros_topic" default="/grid/obj"/>
-    <arg name="msg_type" default="ObjectArray"/>
+    <arg name="msg_type" default="ObjectInfo"/>
 
-    <node pkg="ros_kafka_connector" type="kafka_publish.py" name="kafka_publish">
+    <node pkg="ros_kafka_connector" type="object_publish.py" name="object_publish">
         <param name="~bootstrap_server" value="$(arg bootstrap_server)"/>
         <param name="~kafka_topic" value="$(arg kafka_topic)"/>
         <param name="~ros_topic" value="$(arg ros_topic)"/>

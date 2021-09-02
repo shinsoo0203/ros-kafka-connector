@@ -7,6 +7,8 @@ import rospy
 from rospy_message_converter import json_message_converter
 from utils import import_msg_type
 
+import std_msgs.msg
+
 class kafka_publish():
 
     def __init__(self):
@@ -16,10 +18,10 @@ class kafka_publish():
         rospy.on_shutdown(self.shutdown)
 
         # Retrieve parameters from launch file
-        bootstrap_server = rospy.get_param("~bootstrap_server", "114.70.21.161:2181")
-        self.ros_topic = rospy.get_param("~ros_topic", "test")
-        self.kafka_topic = rospy.get_param("~kafka_topic", "test")
-        self.msg_type = rospy.get_param("~msg_type", "std_msgs/String")
+        bootstrap_server = rospy.get_param("~bootstrap_server", "114.70.21.162:9092")
+        self.ros_topic = rospy.get_param("~ros_topic", "/grid/obj")
+        self.kafka_topic = rospy.get_param("~kafka_topic", "object")
+        self.msg_type = rospy.get_param("~msg_type", "ObjectInfo")
 
 
         # Create kafka producer
@@ -32,13 +34,18 @@ class kafka_publish():
         # Subscribe to the topic with the chosen imported message type
         rospy.Subscriber(self.ros_topic, msg_func, self.callback)
        
-        rospy.logwarn("Using {} MSGs from ROS: {} -> KAFKA: {}".format(self.msg_type, self.ros_topic,self.kafka_topic))
+        #rospy.logwarn("Using {} MSGs from ROS: {} -> KAFKA: {}".format(self.msg_type, self.ros_topic,self.kafka_topic))
 
 
     def callback(self, msg):
         # Output msg to ROS and send to Kafka server
-        rospy.logwarn("MSG Receved: {}".format(msg)) 
-        json_str = json_message_converter.convert_ros_message_to_json(msg)
+        rospy.logwarn("MSG Receved: \n{}".format(msg))
+
+        # Header
+        car_id = "\"car_id\":\"53A1234\", "
+        objectInfo = json_message_converter.convert_ros_message_to_json(msg)
+
+        json_str = car_id + objectInfo
         self.producer.send(self.kafka_topic, json_str)
         
 
