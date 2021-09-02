@@ -18,9 +18,9 @@ def import_msg_type(msg_type):
     elif msg_type == "Sample":
         from ros_kafka_connector.msg import Sample
         subscriber_msg = Sample
-    elif msg_type == "Sample":
-        from ros_kafka_connector.msg import Sample
-        subscriber_msg = Sample
+    elif msg_type == "ObjectArray":
+        from ros_kafka_connector.msg import ObjectArray
+        subscriber_msg = ObjectArray
     else:
         raise ValueError("MSG NOT SUPPORTED: Only String/Twist/Image are currently supported. \
                           Please add imports to utils.py for specific msg type.")

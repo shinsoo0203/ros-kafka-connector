@@ -4,8 +4,8 @@
 
     <arg name="bootstrap_server" default="114.70.21.162:9092"/>
     <arg name="kafka_topic" default="external-comm-test"/>
-    <arg name="ros_topic" default="/ublox_gps/fix"/>
-    <arg name="msg_type" default="sensors_msgs/NavSatFix"/>
+    <arg name="ros_topic" default="/grid/obj"/>
+    <arg name="msg_type" default="ObjectArray"/>
 
     <node pkg="ros_kafka_connector" type="kafka_publish.py" name="kafka_publish">
         <param name="~bootstrap_server" value="$(arg bootstrap_server)"/>
