@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(ros_kafka_connector)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -34,6 +34,7 @@ find_package(catkin REQUIRED COMPONENTS
    FILES
    ObjectArray.msg
    ObjectInfo.msg
+   VehicleInfo.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -55,8 +56,6 @@ find_package(catkin REQUIRED COMPONENTS
    DEPENDENCIES
    std_msgs sensor_msgs # Or other packages containing msgs
  )
-
-
 
 ## Generate dynamic reconfigure parameters in the 'cfg' folder
 # generate_dynamic_reconfigure_options(
@@ -87,9 +86,13 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
-# ${catkin_INCLUDE_DIRS}
+ include
+ ${catkin_INCLUDE_DIRS}
 )
+
+add_executable(msg_collector src/msg_collector.cpp)
+target_link_libraries(msg_collector ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+add_dependencies(msg_collector ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}

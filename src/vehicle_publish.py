@@ -9,20 +9,19 @@ from utils import import_msg_type
 
 import std_msgs.msg
 
-class object_publish():
+class vehicle_publish():
 
     def __init__(self):
 
         # initialize node
-        rospy.init_node("object_publish")
+        rospy.init_node("vehicle_publish")
         rospy.on_shutdown(self.shutdown)
 
         # Retrieve parameters from launch file
         bootstrap_server = rospy.get_param("~bootstrap_server", "114.70.21.162:9092")
-        self.ros_topic = rospy.get_param("~ros_topic", "/grid/obj")
-        self.kafka_topic = rospy.get_param("~kafka_topic", "object")
-        self.msg_type = rospy.get_param("~msg_type", "ObjectInfo")
-
+        self.ros_topic = rospy.get_param("~ros_topic", "/ublox_gps/fix")
+        self.kafka_topic = rospy.get_param("~kafka_topic", "vehicle")
+        self.msg_type = rospy.get_param("~msg_type", "NavSatFix")
 
         # Create kafka producer
         self.producer = KafkaProducer(bootstrap_servers=bootstrap_server, value_serializer=lambda m: json.dumps(m).encode('ascii'))
@@ -33,7 +32,7 @@ class object_publish():
 
         # Subscribe to the topic with the chosen imported message type
         rospy.Subscriber(self.ros_topic, msg_func, self.callback)
-       
+
         #rospy.logwarn("Using {} MSGs from ROS: {} -> KAFKA: {}".format(self.msg_type, self.ros_topic,self.kafka_topic))
 
 
@@ -47,12 +46,12 @@ class object_publish():
 
         json_str = car_id + objectInfo
         self.producer.send(self.kafka_topic, json_str)
-        
+
 
     def run(self):
         rate = rospy.Rate(10)
         while not rospy.is_shutdown():
-            rate.sleep()            
+            rate.sleep()
 
     def shutdown(self):
         rospy.loginfo("Shutting down")
@@ -60,7 +59,7 @@ class object_publish():
 if __name__ == "__main__":
 
     try:
-        node = object_publish()
+        node = vehicle_publish()
         node.run()
     except rospy.ROSInterruptException:
         pass

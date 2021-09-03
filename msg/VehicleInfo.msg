@@ -1,0 +1,2 @@
+sensor_msgs/NavSatFix v_global
+geometry_msgs/Point v_local
